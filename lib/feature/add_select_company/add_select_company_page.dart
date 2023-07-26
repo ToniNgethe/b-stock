@@ -4,6 +4,7 @@ import 'package:bstock/app/utils/context_ext.dart';
 import 'package:bstock/core/database/models/company.dart';
 import 'package:bstock/feature/add_select_company/presentation/bloc/add_select_company_cubit.dart';
 import 'package:bstock/feature/add_select_company/presentation/bloc/add_select_company_state.dart';
+import 'package:bstock/feature/stocks/presentation/stocks_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -79,9 +80,9 @@ class AddSelectCompanyPage extends StatelessWidget {
                               .toList(),
                         ),
                       ),
-                    if (state is AddSelectCompanyStateCompanies) Spacer(),
+                    if (state is AddSelectCompanyStateCompanies) const Spacer(),
                     if (state is AddSelectCompanyStateCompanies)
-                      _displayActions()
+                      _displayActions(context)
                   ],
                 ),
               ),
@@ -92,26 +93,28 @@ class AddSelectCompanyPage extends StatelessWidget {
     );
   }
 
-  Widget _displayActions() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    child: Column(
+  Widget _displayActions(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
           children: [
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: AppColors.colorPrimary,
+                  foregroundColor: Colors.white,
+                  backgroundColor: AppColors.colorPrimary,
                   minimumSize: const Size(double.infinity, 45),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(2)),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.popAndPushNamed(context, StocksPage.routeName);
+                },
                 child: const Text("Continue to Stocks")),
-
-            TextButton(onPressed: () {}, child: Text("Add a company"))
+            TextButton(onPressed: () {}, child: const Text("Add a company"))
           ],
         ),
-  );
+      );
 }
 
 class CompanyWidget extends StatelessWidget {
