@@ -124,19 +124,35 @@ class _$CompanyDao extends CompanyDao {
   final InsertionAdapter<Company> _companyInsertionAdapter;
 
   @override
-  Stream<List<Company>> fetchAllCompanies() {
+  Stream<List<Company>> fetchAndStreamAllCompanies() {
     return _queryAdapter.queryListStream('SELECT * FROM company',
         mapper: (Map<String, Object?> row) => Company(
-            row['id'] as int?,
-            row['name'] as String,
-            row['symbol'] as String,
-            (row['selected'] as int) != 0),
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            symbol: row['symbol'] as String,
+            selected: (row['selected'] as int) != 0),
         queryableName: 'company',
         isView: false);
   }
 
   @override
+  Future<List<Company>> fetchAllCompanies() async {
+    return _queryAdapter.queryList('SELECT * FROM company',
+        mapper: (Map<String, Object?> row) => Company(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            symbol: row['symbol'] as String,
+            selected: (row['selected'] as int) != 0));
+  }
+
+  @override
   Future<void> insert(Company company) async {
     await _companyInsertionAdapter.insert(company, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> insertAll(List<Company> companies) async {
+    await _companyInsertionAdapter.insertList(
+        companies, OnConflictStrategy.replace);
   }
 }
