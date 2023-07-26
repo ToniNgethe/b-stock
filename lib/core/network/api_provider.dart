@@ -7,9 +7,10 @@ class ApiProvider {
 
   ApiProvider(this._dio);
 
-  Future<dynamic> get(String url) async {
+  Future<dynamic> get(String url, Map<String, dynamic> queryParams) async {
     try {
-      final response = await _dio.get<dynamic>(url);
+      final response =
+          await _dio.get<dynamic>(url, queryParameters: queryParams);
       return response.data;
     } on DioException catch (e) {
       throw e.message ?? "Unable to process request";

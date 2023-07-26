@@ -18,12 +18,14 @@ import '../../core/company/domain/company_repository.dart' as _i5;
 import '../../core/database/dao/company_dao.dart' as _i4;
 import '../../core/database/dao/stock_dao.dart' as _i9;
 import '../../core/database/database.dart' as _i3;
-import '../../core/database/database_module.dart' as _i12;
+import '../../core/database/database_module.dart' as _i14;
 import '../../core/network/api_provider.dart' as _i11;
-import '../../core/network/dio_client.dart' as _i13;
+import '../../core/network/dio_client.dart' as _i15;
 import '../../feature/add_select_company/presentation/bloc/add_select_company_cubit.dart'
     as _i10;
 import '../../feature/splash/presentation/splash_cubit.dart' as _i8;
+import '../../feature/stocks/data/stocks_repository_impl.dart' as _i13;
+import '../../feature/stocks/domain/stocks_repository.dart' as _i12;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -55,9 +57,14 @@ Future<_i1.GetIt> $initGetIt(
   gh.factory<_i10.AddSelectCompanyCubit>(
       () => _i10.AddSelectCompanyCubit(gh<_i5.CompanyRepository>()));
   gh.singleton<_i11.ApiProvider>(_i11.ApiProvider(gh<_i7.Dio>()));
+  gh.factory<_i12.StocksRepository>(() => _i13.StocksRepositoryImpl(
+        gh<_i4.CompanyDao>(),
+        gh<_i9.StockDao>(),
+        gh<_i11.ApiProvider>(),
+      ));
   return getIt;
 }
 
-class _$DatabaseNodule extends _i12.DatabaseNodule {}
+class _$DatabaseNodule extends _i14.DatabaseNodule {}
 
-class _$DioClient extends _i13.DioClient {}
+class _$DioClient extends _i15.DioClient {}
