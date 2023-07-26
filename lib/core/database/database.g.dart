@@ -63,6 +63,8 @@ class _$AppDatabase extends AppDatabase {
 
   CompanyDao? _companyDaoInstance;
 
+  StockDao? _stockDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -86,6 +88,8 @@ class _$AppDatabase extends AppDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Company` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `symbol` TEXT NOT NULL, `selected` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `StockEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `open` REAL, `close` REAL, `high` REAL, `low` REAL, `date` TEXT, `symbol` TEXT, `company` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -96,6 +100,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   CompanyDao get companyDao {
     return _companyDaoInstance ??= _$CompanyDao(database, changeListener);
+  }
+
+  @override
+  StockDao get stockDao {
+    return _stockDaoInstance ??= _$StockDao(database, changeListener);
   }
 }
 
@@ -154,5 +163,56 @@ class _$CompanyDao extends CompanyDao {
   Future<void> insertAll(List<Company> companies) async {
     await _companyInsertionAdapter.insertList(
         companies, OnConflictStrategy.replace);
+  }
+}
+
+class _$StockDao extends StockDao {
+  _$StockDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _stockEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'StockEntity',
+            (StockEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'open': item.open,
+                  'close': item.close,
+                  'high': item.high,
+                  'low': item.low,
+                  'date': item.date,
+                  'symbol': item.symbol,
+                  'company': item.company
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<StockEntity> _stockEntityInsertionAdapter;
+
+  @override
+  Stream<List<StockEntity>> fetchAndStreamAllCompanies() {
+    return _queryAdapter.queryListStream('SELECT * FROM stock',
+        mapper: (Map<String, Object?> row) => StockEntity(
+            date: row['date'] as String?,
+            symbol: row['symbol'] as String?,
+            company: row['company'] as String?,
+            id: row['id'] as int?,
+            open: row['open'] as double?,
+            close: row['close'] as double?,
+            high: row['high'] as double?,
+            low: row['low'] as double?),
+        queryableName: 'stock',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertAll(List<StockEntity> stocks) async {
+    await _stockEntityInsertionAdapter.insertList(
+        stocks, OnConflictStrategy.replace);
   }
 }
