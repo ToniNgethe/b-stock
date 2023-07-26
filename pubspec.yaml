@@ -30,6 +30,9 @@ dependencies:
   # ui
   flutter_svg: ^2.0.7
 
+  # network
+  dio: ^5.1.1
+
   # other
   flutter_screenutil: ^5.7.0
 
