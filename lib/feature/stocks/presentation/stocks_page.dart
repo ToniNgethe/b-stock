@@ -58,10 +58,7 @@ class StocksPage extends StatelessWidget {
                                     hint: 'e.g AAPL, GOOGL',
                                     title: 'Search for stock',
                                     valueChanged: (value) {
-                                        ctx
-                                            .read<StockCubit>()
-                                            .searchItems(value);
-
+                                      ctx.read<StockCubit>().searchItems(value);
                                     }),
                                 SizedBox(
                                   height: 12.h,
@@ -77,20 +74,24 @@ class StocksPage extends StatelessWidget {
                                 SizedBox(
                                   height: 12.h,
                                 ),
-                                Expanded(
-                                  child: ListView.separated(
-                                      shrinkWrap: true,
-                                      itemBuilder: (ctx, index) {
-                                        return StockItemWidget(
-                                          stock: data.stocks![index],
-                                        );
-                                      },
-                                      separatorBuilder: (_, __) =>
-                                          const SizedBox(
-                                            height: 18,
-                                          ),
-                                      itemCount: data.stocks!.length),
-                                ),
+                                if (data.stocks?.isEmpty == true)
+                                  const AppErrorWidget(
+                                      error: "No stocks found"),
+                                if (data.stocks?.isNotEmpty == true)
+                                  Expanded(
+                                    child: ListView.separated(
+                                        shrinkWrap: true,
+                                        itemBuilder: (ctx, index) {
+                                          return StockItemWidget(
+                                            stock: data.stocks![index],
+                                          );
+                                        },
+                                        separatorBuilder: (_, __) =>
+                                            const SizedBox(
+                                              height: 18,
+                                            ),
+                                        itemCount: data.stocks!.length),
+                                  ),
                               ],
                             ),
                           );
