@@ -8,7 +8,10 @@ abstract class StockDao {
   Future<void> insertAll(List<StockEntity> stocks);
 
   @Query("SELECT * FROM stock")
-  Stream<List<StockEntity>> fetchAndStreamAllCompanies();
+  Stream<List<StockEntity>> fetchAndStreamAllStocks();
+
+  @Query("SELECT * FROM stock")
+  Future<List<StockEntity>> fetchAllStocks();
 
   @Query("DELETE FROM stock")
   Future<void> nuke();

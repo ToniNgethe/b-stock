@@ -56,10 +56,13 @@ class StocksRepositoryImpl implements StocksRepository {
 
       log("Stock fetched and saved successfully");
     } catch (e) {
-      rethrow;
+      // only throw exception if data is not available
+      final stocks = await stocksDao.fetchAllStocks();
+      if (stocks.isEmpty) rethrow;
     }
   }
 
   @override
-  Stream<List<StockEntity>> fetchAndListenForStock() => stocksDao.fetchAndStreamAllCompanies();
+  Stream<List<StockEntity>> fetchAndListenForStock() =>
+      stocksDao.fetchAndStreamAllStocks();
 }

@@ -33,6 +33,7 @@ dependencies:
 
   # network
   dio: ^5.1.1
+  connectivity_plus: ^4.0.1
 
   # other
   flutter_screenutil: ^5.7.0

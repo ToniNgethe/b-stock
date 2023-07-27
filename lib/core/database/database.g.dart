@@ -195,7 +195,7 @@ class _$StockDao extends StockDao {
   final InsertionAdapter<StockEntity> _stockEntityInsertionAdapter;
 
   @override
-  Stream<List<StockEntity>> fetchAndStreamAllCompanies() {
+  Stream<List<StockEntity>> fetchAndStreamAllStocks() {
     return _queryAdapter.queryListStream('SELECT * FROM stock',
         mapper: (Map<String, Object?> row) => StockEntity(
             date: row['date'] as String?,
@@ -208,6 +208,20 @@ class _$StockDao extends StockDao {
             low: row['low'] as double?),
         queryableName: 'stock',
         isView: false);
+  }
+
+  @override
+  Future<List<StockEntity>> fetchAllStocks() async {
+    return _queryAdapter.queryList('SELECT * FROM stock',
+        mapper: (Map<String, Object?> row) => StockEntity(
+            date: row['date'] as String?,
+            symbol: row['symbol'] as String?,
+            company: row['company'] as String?,
+            id: row['id'] as int?,
+            open: row['open'] as double?,
+            close: row['close'] as double?,
+            high: row['high'] as double?,
+            low: row['low'] as double?));
   }
 
   @override

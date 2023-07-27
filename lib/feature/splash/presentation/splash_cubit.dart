@@ -15,7 +15,7 @@ class SplashCubit extends Cubit<GenericCubitState> {
   void initApp() async {
     try {
       emit(const GenericCubitState.loading());
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
       await companyRepository.companiesAlreadyAdded();
       emit(const GenericCubitState.success("Success"));

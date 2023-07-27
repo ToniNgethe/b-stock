@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/internet_status/presentation/internet_status_widget.dart';
 import '../../../core/widgets/app_textfield.dart';
 import 'widgets/loading_widget.dart';
 import 'widgets/stock_item_widget.dart';
@@ -26,6 +27,7 @@ class StocksPage extends StatelessWidget {
         listener: (ctx, state) {},
         builder: (ctx, state) {
           return Scaffold(
+            bottomNavigationBar: const SafeArea(child: InternetStatusWidget()),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -78,14 +80,11 @@ class StocksPage extends StatelessWidget {
                                           stock: data.stocks![index],
                                         );
                                       },
-                                      separatorBuilder: (_, __) => const SizedBox(
+                                      separatorBuilder: (_, __) =>
+                                          const SizedBox(
                                             height: 18,
                                           ),
                                       itemCount: data.stocks!.length),
-                                ),
-
-                                SizedBox(
-                                  height: 12.h,
                                 ),
                               ],
                             ),
