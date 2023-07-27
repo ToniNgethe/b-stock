@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../../../core/database/models/stock_entity.dart';
 
 class StockUi {
@@ -9,5 +11,10 @@ class StockUi {
 
   static int getPercentageChange(StockEntity stockEntity) {
     return (((stockEntity.close! - stockEntity.open!) / 100) * 100).toInt();
+  }
+
+  static String formatDate(String date) {
+    final inputDate = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(date);
+    return DateFormat("d MMM, yyyy").format(inputDate);
   }
 }

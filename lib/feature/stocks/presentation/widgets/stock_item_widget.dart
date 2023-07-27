@@ -90,7 +90,7 @@ class StockItemWidget extends StatelessWidget {
           children: [
             const Spacer(),
             Text(
-              "${stock.date}",
+              "As at ${StockUi.formatDate(stock.date!)}",
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
