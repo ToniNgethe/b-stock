@@ -1,15 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/database/models/stock_entity.dart';
 
-class StockUi {
+class StockUi extends Equatable {
   final List<StockEntity>? stocks;
   final StockEntity? highestStock;
   final StockEntity? lowestStock;
   final String? toDate;
   final String? fromDate;
 
-  StockUi({
+  const StockUi({
     this.stocks,
     this.highestStock,
     this.lowestStock,
@@ -40,4 +41,8 @@ class StockUi {
     final inputDate = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(date);
     return DateFormat("d MMM, yyyy").format(inputDate);
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [highestStock, lowestStock, stocks];
 }

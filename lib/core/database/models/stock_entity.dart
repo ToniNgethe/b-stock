@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:floor/floor.dart';
 
 @Entity(tableName: 'stock')
-class StockEntity {
+class StockEntity extends Equatable {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final double? open;
@@ -21,4 +22,7 @@ class StockEntity {
       this.close,
       this.high,
       this.low});
+
+  @override
+  List<Object?> get props => [id, open, close, symbol, company];
 }

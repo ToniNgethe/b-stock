@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:floor/floor.dart';
 
 @Entity()
-class Company {
+class Company extends Equatable {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final String name;
@@ -28,4 +29,7 @@ class Company {
       Company(name: "Intel Corp", symbol: "INTC", selected: true),
     ];
   }
+
+  @override
+  List<Object?> get props => [name, symbol, selected];
 }
