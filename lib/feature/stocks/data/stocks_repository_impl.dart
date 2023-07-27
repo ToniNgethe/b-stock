@@ -19,7 +19,7 @@ class StocksRepositoryImpl implements StocksRepository {
   StocksRepositoryImpl(this.companyDao, this.stocksDao, this.apiProvider);
 
   @override
-  Future<void> fetchStockEntity() async {
+  Future<void> fetchStockEntity([String? dateFrom, String? dateTo]) async {
     try {
       // fetch all companies
       final companies = await companyDao.fetchAllCompanies();
@@ -27,12 +27,23 @@ class StocksRepositoryImpl implements StocksRepository {
       // fetch data from api
       final queryParams = {
         'access_key': '79a5d93a473946a3062b4597d12efdbc',
-        'symbols': companies.map((element) => element.symbol).toList().join(',')
+        'symbols':
+            companies.map((element) => element.symbol).toList().join(','),
+        'date_from': dateFrom,
+        'date_to': dateTo
       };
+
       final response = await apiProvider.get(EndPoints.eod.url, queryParams);
       final responseObj = StockResponseDto.fromJson(response);
 
       if (responseObj.data?.isEmpty == true) {
+        //clear previous data if data is empty
+        await stocksDao.nuke();
+
+        // throw specific error in case user searched using a date range
+        if (dateTo != null && dateFrom != null) {
+          throw 'No stock data found from $dateFrom to ${dateTo}';
+        }
         throw 'No stock data found at the moment';
       }
 

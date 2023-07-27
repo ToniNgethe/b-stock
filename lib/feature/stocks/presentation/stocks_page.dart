@@ -1,5 +1,6 @@
 import 'package:bstock/app/di/injector.dart';
 import 'package:bstock/app/utils/app_colors.dart';
+import 'package:bstock/app/utils/context_ext.dart';
 import 'package:bstock/core/widgets/app_error_widget.dart';
 import 'package:bstock/feature/stocks/presentation/bloc/stock_cubit.dart';
 import 'package:bstock/feature/stocks/presentation/bloc/stock_state.dart';
@@ -63,13 +64,51 @@ class StocksPage extends StatelessWidget {
                                 SizedBox(
                                   height: 12.h,
                                 ),
-                                Text(
-                                  "Stocks",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(
-                                          color: AppColors.secondaryTextColor),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Stocks: ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(color: Colors.grey),
+                                      ),
+                                      Text(
+                                        data.fromDate != null && data.toDate != null ? '${data.fromDate!} - ${data.toDate!}' : 'Today',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(color: Colors.black),
+                                      ),
+                                      const Spacer(),
+                                      InkWell(
+                                          onTap: () async {
+                                            DateTimeRange? result =
+                                                await showDateRangePicker(
+                                              context: context,
+                                              firstDate: DateTime(1995, 1, 1),
+                                              // the earliest allowable date
+                                              lastDate: DateTime.now(),
+                                              // the latest allowable date
+                                              currentDate: DateTime.now(),
+                                              saveText: 'Done',
+                                            );
+                                            if (result != null) {
+                                              ctx
+                                                  .read<StockCubit>()
+                                                  .fetchAndFilterByDate(
+                                                      result.end, result.start);
+                                            } else {
+                                              context.displaySnack(
+                                                  "No date range selected");
+                                            }
+                                          },
+                                          child: const Icon(
+                                              Icons.calendar_month_sharp))
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 12.h,

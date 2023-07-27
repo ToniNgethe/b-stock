@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bstock/core/database/models/stock_entity.dart';
 import 'package:bstock/feature/stocks/presentation/stock_ui.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 
 import '../../domain/stocks_repository.dart';
 import 'stock_state.dart';
@@ -19,10 +20,10 @@ class StockCubit extends Cubit<StockState> {
   }
 
   /// The function `fetchData` fetches stock data and updates the state accordingly.
-  void fetchData() async {
+  void fetchData([String? dateFrom, String? dateTo]) async {
     try {
       emit(const StockState.loading());
-      await stocksRepository.fetchStockEntity();
+      await stocksRepository.fetchStockEntity(dateFrom, dateTo);
     } catch (e) {
       emit(StockState.error(e.toString()));
     }
@@ -55,10 +56,18 @@ class StockCubit extends Cubit<StockState> {
             lowestStock = element;
           }
         }
-        _stockUi = StockUi(
-            highestStock: highestStock,
-            lowestStock: lowestStock,
-            stocks: event);
+
+        // only update ui with new data and
+        // emit new ui if its first time
+        _stockUi = _stockUi == null
+            ? StockUi(
+                highestStock: highestStock,
+                lowestStock: lowestStock,
+                stocks: event)
+            : _stockUi?.copyWith(
+                highestStock: highestStock,
+                lowestStock: lowestStock,
+                stocks: event);
         emit(StockState.stockData(_stockUi!));
       }
     });
@@ -92,6 +101,20 @@ class StockCubit extends Cubit<StockState> {
     } else {
       emit(StockState.stockData(_stockUi!));
     }
+  }
+
+  void fetchAndFilterByDate(DateTime to, DateTime from) {
+    // update ui with new dates
+    _stockUi = _stockUi!.copyWith(
+      toDate: DateFormat("d MMM, yyyy").format(to),
+      fromDate: DateFormat("d MMM, yyyy").format(from),
+    );
+
+    emit(StockState.stockData(_stockUi!));
+
+    // make request
+    fetchData(DateFormat("yyyy-MM-dd").format(from),
+        DateFormat("yyyy-MM-dd").format(to));
   }
 
   @override
