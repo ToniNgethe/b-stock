@@ -32,4 +32,9 @@ class CompanyRepoImpl implements CompanyRepository {
   @override
   Stream<List<Company>> fetchAndListenForCompanyUpdates() =>
       companyDao.fetchAndStreamAllCompanies();
+
+  //TODO: capture error
+  @override
+  Future<List<Company>> fetchCompanies() async =>
+      await companyDao.fetchAllCompanies();
 }

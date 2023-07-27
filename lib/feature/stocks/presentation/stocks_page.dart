@@ -1,5 +1,4 @@
 import 'package:bstock/app/di/injector.dart';
-import 'package:bstock/app/utils/app_colors.dart';
 import 'package:bstock/app/utils/context_ext.dart';
 import 'package:bstock/core/widgets/app_error_widget.dart';
 import 'package:bstock/feature/stocks/presentation/bloc/stock_cubit.dart';
@@ -55,7 +54,7 @@ class StocksPage extends StatelessWidget {
                                 SizedBox(
                                   height: 12.h,
                                 ),
-                                AppTextField(
+                                AppSearchTextField(
                                     hint: 'e.g AAPL, GOOGL',
                                     title: 'Search for stock',
                                     valueChanged: (value) {
@@ -69,14 +68,17 @@ class StocksPage extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "Stocks: ",
+                                        "Date(s): ",
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall
                                             ?.copyWith(color: Colors.grey),
                                       ),
                                       Text(
-                                        data.fromDate != null && data.toDate != null ? '${data.fromDate!} - ${data.toDate!}' : 'Today',
+                                        data.fromDate != null &&
+                                                data.toDate != null
+                                            ? '${data.fromDate!} - ${data.toDate!}'
+                                            : 'Today',
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall

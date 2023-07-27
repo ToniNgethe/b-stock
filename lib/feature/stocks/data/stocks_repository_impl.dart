@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bstock/core/database/dao/company_dao.dart';
+import 'package:bstock/core/database/models/company.dart';
 import 'package:bstock/core/database/models/stock_entity.dart';
 import 'package:bstock/core/network/end_points.dart';
 import 'package:bstock/feature/stocks/data/dto/stock_response_dto.dart';
@@ -76,4 +77,14 @@ class StocksRepositoryImpl implements StocksRepository {
   @override
   Stream<List<StockEntity>> fetchAndListenForStock() =>
       stocksDao.fetchAndStreamAllStocks();
+
+  @override
+  Future<List<Company>> fetchCompanies() async {
+    try {
+      final companies = await companyDao.fetchAllCompanies();
+      return companies;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

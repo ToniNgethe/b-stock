@@ -88,6 +88,7 @@ class StockCubit extends Cubit<StockState> {
       emit(StockState.stockData(_stockUi!));
       return;
     }
+
     if (query.trim().length > 2) {
       final filteredStock = _stockUi?.stocks!
           .where((element) =>

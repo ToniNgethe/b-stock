@@ -1,15 +1,19 @@
+import 'package:bstock/app/di/injector.dart';
+import 'package:bstock/core/database/models/company.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../app/utils/app_colors.dart';
+import '../company/presentation/company_cubit.dart';
 
-class AppTextField extends StatelessWidget {
+class AppSearchTextField extends StatelessWidget {
   final String? title;
   final String? hint;
   final ValueChanged? valueChanged;
   final FormFieldValidator? formFieldValidator;
 
-  const AppTextField(
+  const AppSearchTextField(
       {Key? key,
       this.valueChanged,
       this.formFieldValidator,
@@ -19,27 +23,54 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 6),
-          child: Text(
-            "$title",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: TextFormField(
-            validator: formFieldValidator,
-            style: const TextStyle(color: AppColors.secondaryColor),
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: valueChanged,
-            decoration: buildInputDecoration(hint ?? ''),
-          ),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => getIt<CompanyCubit>()..fetchCompanies(),
+      child: BlocBuilder<CompanyCubit, List<Company>>(
+        builder: (ctx, state) {
+          if (state.isNotEmpty) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 6),
+                  child: Text(
+                    "$title",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Autocomplete<String>(
+                        optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      }
+                      return state.map((e) => e.name).where((String option) {
+                        return option
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase());
+                      });
+                    }, onSelected: (String selection) {
+                      valueChanged!(selection);
+                    }, fieldViewBuilder: (BuildContext context,
+                            TextEditingController textEditingController,
+                            FocusNode focusNode,
+                            VoidCallback onFieldSubmitted) {
+                      return TextField(
+                          controller: textEditingController,
+                          focusNode: focusNode,
+                          onChanged: valueChanged,
+                          style:
+                              const TextStyle(color: AppColors.secondaryColor),
+                          decoration: buildInputDecoration(hint ?? ''));
+                    })),
+              ],
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
     );
   }
 }

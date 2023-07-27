@@ -15,20 +15,21 @@ import 'package:injectable/injectable.dart' as _i2;
 
 import '../../core/company/data/company_repo_impl.dart' as _i6;
 import '../../core/company/domain/company_repository.dart' as _i5;
+import '../../core/company/presentation/company_cubit.dart' as _i13;
 import '../../core/database/dao/company_dao.dart' as _i4;
 import '../../core/database/dao/stock_dao.dart' as _i10;
 import '../../core/database/database.dart' as _i3;
-import '../../core/database/database_module.dart' as _i16;
+import '../../core/database/database_module.dart' as _i17;
 import '../../core/internet_status/presentation/bloc/internet_status_cubit.dart'
     as _i8;
 import '../../core/network/api_provider.dart' as _i12;
-import '../../core/network/dio_client.dart' as _i17;
+import '../../core/network/dio_client.dart' as _i18;
 import '../../feature/add_select_company/presentation/bloc/add_select_company_cubit.dart'
     as _i11;
 import '../../feature/splash/presentation/splash_cubit.dart' as _i9;
-import '../../feature/stocks/data/stocks_repository_impl.dart' as _i14;
-import '../../feature/stocks/domain/stocks_repository.dart' as _i13;
-import '../../feature/stocks/presentation/bloc/stock_cubit.dart' as _i15;
+import '../../feature/stocks/data/stocks_repository_impl.dart' as _i15;
+import '../../feature/stocks/domain/stocks_repository.dart' as _i14;
+import '../../feature/stocks/presentation/bloc/stock_cubit.dart' as _i16;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -62,16 +63,18 @@ Future<_i1.GetIt> $initGetIt(
   gh.factory<_i11.AddSelectCompanyCubit>(
       () => _i11.AddSelectCompanyCubit(gh<_i5.CompanyRepository>()));
   gh.singleton<_i12.ApiProvider>(_i12.ApiProvider(gh<_i7.Dio>()));
-  gh.factory<_i13.StocksRepository>(() => _i14.StocksRepositoryImpl(
+  gh.factory<_i13.CompanyCubit>(
+      () => _i13.CompanyCubit(gh<_i5.CompanyRepository>()));
+  gh.factory<_i14.StocksRepository>(() => _i15.StocksRepositoryImpl(
         gh<_i4.CompanyDao>(),
         gh<_i10.StockDao>(),
         gh<_i12.ApiProvider>(),
       ));
-  gh.factory<_i15.StockCubit>(
-      () => _i15.StockCubit(gh<_i13.StocksRepository>()));
+  gh.factory<_i16.StockCubit>(
+      () => _i16.StockCubit(gh<_i14.StocksRepository>()));
   return getIt;
 }
 
-class _$DatabaseNodule extends _i16.DatabaseNodule {}
+class _$DatabaseNodule extends _i17.DatabaseNodule {}
 
-class _$DioClient extends _i17.DioClient {}
+class _$DioClient extends _i18.DioClient {}
