@@ -54,10 +54,15 @@ class StocksPage extends StatelessWidget {
                                 SizedBox(
                                   height: 12.h,
                                 ),
-                                const AppTextField(
-                                  hint: 'e.g AAPL, GOOGL',
-                                  title: 'Search for stock',
-                                ),
+                                AppTextField(
+                                    hint: 'e.g AAPL, GOOGL',
+                                    title: 'Search for stock',
+                                    valueChanged: (value) {
+                                        ctx
+                                            .read<StockCubit>()
+                                            .searchItems(value);
+
+                                    }),
                                 SizedBox(
                                   height: 12.h,
                                 ),

@@ -12,6 +12,7 @@ import 'stock_state.dart';
 class StockCubit extends Cubit<StockState> {
   final StocksRepository stocksRepository;
   StreamSubscription? _streamSubscription;
+  StockUi? _stockUi;
 
   StockCubit(this.stocksRepository) : super(const StockState.init()) {
     listenForStockDataUpdates();
@@ -54,13 +55,43 @@ class StockCubit extends Cubit<StockState> {
             lowestStock = element;
           }
         }
-
-        emit(StockState.stockData(StockUi(
+        _stockUi = StockUi(
             highestStock: highestStock,
             lowestStock: lowestStock,
-            stocks: event)));
+            stocks: event);
+        emit(StockState.stockData(_stockUi!));
       }
     });
+  }
+
+  /// The function `searchItems` filters a list of stocks based on a query and
+  /// updates the UI with the filtered results.
+  ///
+  /// Args:
+  ///   query (String): The query parameter is a String that represents the search
+  /// query entered by the user. It is used to filter the stock data based on the
+  /// company name.
+  ///
+  /// Returns:
+  ///   a `StockState.stockData` object.
+  void searchItems(String? query) {
+    if (query == null) {
+      emit(StockState.stockData(_stockUi!));
+      return;
+    }
+    if (query.trim().length > 2) {
+      final filteredStock = _stockUi?.stocks!
+          .where((element) =>
+              element.company!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      emit(StockState.stockData(StockUi(
+          highestStock: _stockUi!.highestStock,
+          lowestStock: _stockUi!.lowestStock,
+          stocks: filteredStock)));
+    } else {
+      emit(StockState.stockData(_stockUi!));
+    }
   }
 
   @override
