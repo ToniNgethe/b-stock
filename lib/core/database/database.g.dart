@@ -89,7 +89,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Company` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `symbol` TEXT NOT NULL, `selected` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `StockEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `open` REAL, `close` REAL, `high` REAL, `low` REAL, `date` TEXT, `symbol` TEXT, `company` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `stock` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `open` REAL, `close` REAL, `high` REAL, `low` REAL, `date` TEXT, `symbol` TEXT, `company` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -173,7 +173,7 @@ class _$StockDao extends StockDao {
   )   : _queryAdapter = QueryAdapter(database, changeListener),
         _stockEntityInsertionAdapter = InsertionAdapter(
             database,
-            'StockEntity',
+            'stock',
             (StockEntity item) => <String, Object?>{
                   'id': item.id,
                   'open': item.open,
@@ -208,6 +208,11 @@ class _$StockDao extends StockDao {
             low: row['low'] as double?),
         queryableName: 'stock',
         isView: false);
+  }
+
+  @override
+  Future<void> nuke() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM stock');
   }
 
   @override

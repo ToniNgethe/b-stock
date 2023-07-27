@@ -9,4 +9,7 @@ abstract class StockDao {
 
   @Query("SELECT * FROM stock")
   Stream<List<StockEntity>> fetchAndStreamAllCompanies();
+
+  @Query("DELETE FROM stock")
+  Future<void> nuke();
 }

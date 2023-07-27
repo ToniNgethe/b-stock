@@ -4,7 +4,6 @@ import 'package:bstock/core/database/dao/company_dao.dart';
 import 'package:bstock/core/database/models/stock_entity.dart';
 import 'package:bstock/core/network/end_points.dart';
 import 'package:bstock/feature/stocks/data/dto/stock_response_dto.dart';
-import 'package:bstock/feature/stocks/domain/stock.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/database/dao/stock_dao.dart';
@@ -36,6 +35,9 @@ class StocksRepositoryImpl implements StocksRepository {
       if (responseObj.data?.isEmpty == true) {
         throw 'No stock data found at the moment';
       }
+
+      //clear previous data
+      await stocksDao.nuke();
 
       // save data to db
       await stocksDao.insertAll(responseObj.data!
