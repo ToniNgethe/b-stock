@@ -5,6 +5,7 @@ import 'package:bstock/core/database/models/company.dart';
 import 'package:bstock/core/database/models/stock_entity.dart';
 import 'package:bstock/core/network/end_points.dart';
 import 'package:bstock/feature/stocks/data/dto/stock_response_dto.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/database/dao/stock_dao.dart';
@@ -27,7 +28,7 @@ class StocksRepositoryImpl implements StocksRepository {
 
       // fetch data from api
       final queryParams = {
-        'access_key': '79a5d93a473946a3062b4597d12efdbc',
+        'access_key': dotenv.env['API_KEY'],
         'symbols':
             companies.map((element) => element.symbol).toList().join(','),
         'date_from': dateFrom,

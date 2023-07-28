@@ -1,9 +1,14 @@
+
+
+import 'dart:io';
+
 import 'package:bstock/core/database/dao/company_dao.dart';
 import 'package:bstock/core/database/dao/stock_dao.dart';
 import 'package:bstock/core/database/models/company.dart';
 import 'package:bstock/core/network/api_provider.dart';
 import 'package:bstock/feature/stocks/data/dto/stock_response_dto.dart';
 import 'package:bstock/feature/stocks/data/stocks_repository_impl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -18,6 +23,9 @@ void main() {
   late StocksRepositoryImpl stocksRepositoryImpl;
 
   setUp(() {
+    // Loading from a file synchronously.
+    dotenv.testLoad(fileInput: File('.env').readAsStringSync());
+
     mockCompanyDao = MockCompanyDao();
     mockStockDao = MockStockDao();
     mockApiProvider = MockApiProvider();

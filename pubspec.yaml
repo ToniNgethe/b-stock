@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil: ^5.7.0
   intl: ^0.17.0
   equatable: ^2.0.5
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
   assets:
     - assets/font/
     - assets/icon/
+    - .env
 
   fonts:
     - family: nunito
