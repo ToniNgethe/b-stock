@@ -2,7 +2,7 @@
   <img src="assets/icon/ic_icon.png" width="160">
 </p>
 
-<h1 align="center">B-Stocks!</h1>
+<h1 align="center">B-Stocks</h1>
 <h3 align="center">A Simple stocks application for both android and iOS.</h3>
 
 <p align="center">
