@@ -34,7 +34,8 @@ class StockUi extends Equatable {
       );
 
   static int getPercentageChange(StockEntity stockEntity) {
-    return (((stockEntity.close! - stockEntity.open!) / 100) * 100).toInt();
+    return (((stockEntity.close! - stockEntity.open!) / stockEntity.open!) * 100)
+        .toInt();
   }
 
   static String formatDate(String date) {
